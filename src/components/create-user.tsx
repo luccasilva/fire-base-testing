@@ -1,18 +1,36 @@
 import React from "react";
 import { doc, setDoc } from "@firebase/firestore";
-import { createUsersCol } from "../_firebase/useDb";
+import { createUsersCol, getUsersCol } from "../_firebase/useDb";
 import { useForm } from "react-hook-form";
-import { CreateUserAttributes } from "../interfaces";
+import { CreateUserAttributes, User } from "../interfaces";
+import { getDocs } from "firebase/firestore";
 
-export default function ReadUsers() {
+interface Props {
+  users: User[];
+  setUsers: (users: User[]) => void;
+}
+
+export default function CreateUser({ users, setUsers }: Props) {
   const { register, handleSubmit } = useForm<CreateUserAttributes>();
 
   const handleCreateUserSubmit = async (data: CreateUserAttributes) => {
     const userRef = doc(createUsersCol);
-    await setDoc(userRef, {
-      name: data.name,
-      email: data.email,
-    });
+    try {
+      await setDoc(userRef, {
+        name: data.name,
+        email: data.email,
+      })
+    }
+    catch (error: unknown) {
+      console.log(error)
+    }
+    const usersDocs = await getDocs(getUsersCol);
+    setUsers(
+      usersDocs.docs.map((userDoc) => ({
+        ...userDoc.data(),
+        userId: userDoc.id,
+      }))
+    );
   };
 
   return (

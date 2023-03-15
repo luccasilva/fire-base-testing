@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { getDocs } from "@firebase/firestore";
-import { firestore, getUsersCol } from "../_firebase/useDb";
+import { firestore, getUserById, getUsersCol, usersRef } from "../_firebase/useDb";
 import User from "../interfaces/user/user";
-import { deleteDoc, doc } from "firebase/firestore";
+import { collection, deleteDoc, doc, getDoc } from "firebase/firestore";
 
-interface Props {}
+interface Props {
+  users: User[];
+  setUsers: (users: User[]) => void;
+}
 
-// eslint-disable-next-line no-empty-pattern
-export default function ReadUsers({}: Props) {
-  const [users, setUsers] = useState<User[]>([]);
+export default function ReadUsers({ users, setUsers }: Props) {
 
   const handleDeleteUser = async (deleteUserId: string) => {
     await deleteDoc(doc(firestore, "users", deleteUserId));
@@ -28,6 +29,12 @@ export default function ReadUsers({}: Props) {
     );
   };
 
+  const handleViewUser = async (userId: string) => {
+    const docRef = doc(collection(firestore, 'users'), userId)
+    const userDocSnap = await getDoc(docRef);
+    console.log({ id: userDocSnap.id, ...userDocSnap.data() })
+  };
+
   useEffect(() => {
     getUsers();
   }, []);
@@ -42,6 +49,9 @@ export default function ReadUsers({}: Props) {
               <li>{user.email}</li>
               <button onClick={() => handleDeleteUser(user.userId)}>
                 Deletar
+              </button>
+              <button onClick={() => handleViewUser(user.userId)}>
+                Visualizar
               </button>
               <br />
             </div>

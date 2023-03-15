@@ -4,6 +4,7 @@ import {
   collection,
   DocumentData,
   CollectionReference,
+  doc,
 } from "firebase/firestore";
 
 import { CreateUserAttributes, User } from "../interfaces";
@@ -21,6 +22,10 @@ export const firestore = getFirestore();
 
 const createCollection = <T = DocumentData>(collectionName: string) => {
   return collection(firestore, collectionName) as CollectionReference<T>;
+};
+
+export const getUserById = (userId: string) => {
+  return doc(collection(firestore, 'users'), userId);
 };
 
 // Collections
