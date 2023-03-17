@@ -1,26 +1,27 @@
-import React, { useEffect, useState } from "react";
-import { getDocs } from "@firebase/firestore";
-import { firestore, getUserById, getUsersCol, usersRef } from "../_firebase/useDb";
-import User from "../interfaces/user/user";
-import { collection, deleteDoc, doc, getDoc } from "firebase/firestore";
+import React, { useEffect } from "react";
+import useUserContext from "../context/user/context";
+import {
+  deleteUserDocumentById,
+  getAllUsersDocs,
+  getUserSnapshotById,
+} from "../_firebase/user/services";
 
-interface Props {
-  users: User[];
-  setUsers: (users: User[]) => void;
-}
+export default function ReadUsers() {
+  const { users, setUsers } = useUserContext();
 
-export default function ReadUsers({ users, setUsers }: Props) {
-
-  const handleDeleteUser = async (deleteUserId: string) => {
-    await deleteDoc(doc(firestore, "users", deleteUserId));
-    const usersAfterDelete = users.filter(
-      (user) => user.userId !== deleteUserId
-    );
+  const handleDeleteUser = async (userId: string) => {
+    await deleteUserDocumentById(userId);
+    const usersAfterDelete = users.filter((user) => user.userId !== userId);
     setUsers(usersAfterDelete);
   };
 
+  const handleViewUser = async (userId: string) => {
+    const userDocSnap = await getUserSnapshotById(userId);
+    console.log({ id: userDocSnap.id, ...userDocSnap.data() });
+  };
+
   const getUsers = async () => {
-    const usersDocs = await getDocs(getUsersCol);
+    const usersDocs = await getAllUsersDocs();
     setUsers(
       usersDocs.docs.map((userDoc) => ({
         ...userDoc.data(),
@@ -29,14 +30,9 @@ export default function ReadUsers({ users, setUsers }: Props) {
     );
   };
 
-  const handleViewUser = async (userId: string) => {
-    const docRef = doc(collection(firestore, 'users'), userId)
-    const userDocSnap = await getDoc(docRef);
-    console.log({ id: userDocSnap.id, ...userDocSnap.data() })
-  };
-
   useEffect(() => {
     getUsers();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

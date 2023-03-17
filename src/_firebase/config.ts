@@ -4,12 +4,9 @@ import {
   collection,
   DocumentData,
   CollectionReference,
-  doc,
 } from "firebase/firestore";
 
-import { CreateUserAttributes, User } from "../interfaces";
-
-export const firebaseApp = initializeApp({
+const firebaseApp = initializeApp({
   apiKey: "AIzaSyCenr8r0CgpCp6IK7yAkUUV_5AjyMLlhTQ",
   authDomain: "fire-base-testing-75417.firebaseapp.com",
   projectId: "fire-base-testing-75417",
@@ -18,17 +15,10 @@ export const firebaseApp = initializeApp({
   appId: "1:1040141787766:web:6d50840b45b6ec2521f557",
 });
 
-export const firestore = getFirestore();
+const firestore = getFirestore();
 
 const createCollection = <T = DocumentData>(collectionName: string) => {
   return collection(firestore, collectionName) as CollectionReference<T>;
 };
 
-export const getUserById = (userId: string) => {
-  return doc(collection(firestore, 'users'), userId);
-};
-
-// Collections
-export const usersRef = collection(firestore, "users");
-export const getUsersCol = createCollection<User>("users");
-export const createUsersCol = createCollection<CreateUserAttributes>("users");
+export { firebaseApp, firestore, createCollection };

@@ -1,15 +1,13 @@
-import { useState } from "react";
-import CreateUser from "./components/create-user";
-import ReadUsers from "./components/read-users";
-import { User } from "./interfaces";
+import React from "react";
+import Router from "./router";
+import AplicationContextProvider from "./context";
 
 function App() {
-  const [users, setUsers] = useState<User[]>([]);
-
   return (
     <>
-      <CreateUser users={users} setUsers={setUsers} />
-      <ReadUsers users={users} setUsers={setUsers} />
+      <AplicationContextProvider>
+        <Router />
+      </AplicationContextProvider>
     </>
   );
 }
