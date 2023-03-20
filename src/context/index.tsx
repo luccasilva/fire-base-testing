@@ -1,9 +1,14 @@
 import React from "react";
+import AuthContextProvider from "./auth/provider";
 import ContextProviderProps from "./ContextProviderProps";
-import UsersContextProvider from "./user/provider";
+import ExercisesContextProvider from "./exercise/provider";
 
 function AplicationContextProvider({ children }: ContextProviderProps) {
-  return <UsersContextProvider>{children}</UsersContextProvider>;
+  return (
+    <AuthContextProvider>
+      <ExercisesContextProvider>{children}</ExercisesContextProvider>
+    </AuthContextProvider>
+  );
 }
 
 export default AplicationContextProvider;

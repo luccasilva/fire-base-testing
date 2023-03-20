@@ -1,7 +1,8 @@
 interface User {
   userId: string;
-  name: string;
+  createdByUid: string;
   email: string;
+  name: string;
 }
 
 export default User;

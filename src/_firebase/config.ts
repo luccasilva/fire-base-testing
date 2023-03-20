@@ -1,4 +1,5 @@
 import { initializeApp } from "firebase/app";
+import { getAuth } from "firebase/auth";
 import {
   getFirestore,
   collection,
@@ -17,8 +18,10 @@ const firebaseApp = initializeApp({
 
 const firestore = getFirestore();
 
+const firebaseAuth = getAuth(firebaseApp);
+
 const createCollection = <T = DocumentData>(collectionName: string) => {
   return collection(firestore, collectionName) as CollectionReference<T>;
 };
 
-export { firebaseApp, firestore, createCollection };
+export { firebaseApp, firestore, firebaseAuth, createCollection };

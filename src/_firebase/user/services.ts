@@ -1,5 +1,5 @@
 import { deleteDoc, doc, getDoc, getDocs, setDoc } from "firebase/firestore";
-import { CreateUserAttributes, User } from "../../interfaces";
+import { CreateUserAttributes } from "../../interfaces";
 import { createUserCollection, usersCollection } from "./collections";
 
 const getAllUsersDocs = async () => {
@@ -17,6 +17,7 @@ const getUserSnapshotById = async (userId: string) => {
 const createUserDocument = async (user: CreateUserAttributes) => {
   const createUserDocument = doc(createUserCollection);
   return await setDoc(createUserDocument, {
+    createdByUid: user.createdByUid,
     name: user.name,
     email: user.email,
   });
